@@ -227,7 +227,7 @@ with st.container(border=True):
                     go.Bar(
                         x=multipliers, y=levers, orientation="h",
                         marker_color=colors, marker_line=dict(color="black", width=1),
-                        text=[f"{m:,.1f}x" for m in multipliers],
+                           text=[f"{m:,.1f}".removesuffix(".0") + "x" for m in multipliers],
                         textposition="outside", textfont=DATA_LABEL_FONT,
                     )
                 )
@@ -700,10 +700,10 @@ with st.container(border=True):
             # Only draw the choropleth if enough counties matched, otherwise a mostly
             # blank map is worse than the point fallback
             if len(matched) >= max(5, len(filtered) // 2):
-                fig_map = px.choropleth_mapbox(
+                fig_map = px.choropleth_map(
                     matched, geojson=geojson_data, locations="geo_name",
                     featureidkey=f"properties.{name_key}", color="combo",
-                    color_discrete_map=BIVAR_COLOR_MAP, mapbox_style="carto-positron",
+                    color_discrete_map=BIVAR_COLOR_MAP, map_style="carto-positron",
                     zoom=5.6, center={"lat": 53.4, "lon": -8.7}, opacity=0.9,
                     hover_name="county", hover_data={"risk_tier": True, "income_tier": True, "combo": False},
                     height=560,
@@ -717,14 +717,14 @@ with st.container(border=True):
                 # Labels drawn twice, a wider white pass under a black one, so county
                 # names stay legible over both light and dark fills
                 fig_map.add_trace(
-                    go.Scattermapbox(
+                    go.Scattermap(
                         lat=[c[0] for c in LABEL_COUNTIES.values()], lon=[c[1] for c in LABEL_COUNTIES.values()],
                         mode="text", text=list(LABEL_COUNTIES.keys()),
                         textfont=dict(size=20, color="#FFFFFF"), hoverinfo="skip", showlegend=False,
                     )
                 )
                 fig_map.add_trace(
-                    go.Scattermapbox(
+                    go.Scattermap(
                         lat=[c[0] for c in LABEL_COUNTIES.values()], lon=[c[1] for c in LABEL_COUNTIES.values()],
                         mode="text", text=list(LABEL_COUNTIES.keys()),
                         textfont=dict(size=17, color="#000000"), hoverinfo="skip", showlegend=False,
@@ -755,11 +755,11 @@ with st.container(border=True):
             filtered["lat"] = filtered["county"].map(lambda c: COUNTY_COORDS.get(c, (None, None))[0])
             filtered["lon"] = filtered["county"].map(lambda c: COUNTY_COORDS.get(c, (None, None))[1])
             point_data = filtered.dropna(subset=["lat", "lon"])
-            fig_map = px.scatter_mapbox(
+            fig_map = px.scatter_map(
                 point_data, lat="lat", lon="lon", color="combo", color_discrete_map=BIVAR_COLOR_MAP,
                 size="cars_per_1000", size_max=32, hover_name="county",
                 hover_data={"risk_tier": True, "income_tier": True, "combo": False},
-                zoom=5.7, height=560, mapbox_style="carto-positron", center={"lat": 53.4, "lon": -8.7},
+                zoom=5.7, height=560, map_style="carto-positron", center={"lat": 53.4, "lon": -8.7},
             )
             fig_map.update_traces(marker=dict(sizemin=10))
             fig_map.update_layout(margin=dict(l=0, r=0, t=10, b=10), showlegend=False)

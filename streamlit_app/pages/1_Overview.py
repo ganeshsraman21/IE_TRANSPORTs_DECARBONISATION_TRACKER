@@ -137,7 +137,13 @@ with side_col:
                     text=[f"{pct_val:+.1f}%"], textposition="outside", textfont=DATA_LABEL_FONT,
                 )
             )
+        # Same height as the line chart beside it. Symmetric headroom keeps the outside
+        # value labels from being clipped and extends the hover area past the bars
+        lo, hi = min(pct_vals + [0]), max(pct_vals + [0])
+        pad = max(hi - lo, 1) * 0.12
         fig2 = chart_layout(fig2, height=380)
+        fig2.update_layout(margin=dict(t=10, l=10, r=10, b=85))
+        fig2.update_yaxes(range=[lo - pad, hi + pad])
         fig2.update_layout(yaxis_title="% change since 2019", xaxis=dict(visible=False, showticklabels=False, title=None))
         st.plotly_chart(fig2, use_container_width=True, config=PLOTLY_CONFIG)
 

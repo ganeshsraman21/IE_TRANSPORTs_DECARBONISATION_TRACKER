@@ -16,4 +16,4 @@ requests>=2.31
 
 # Dashboard (streamlit_app/)
 streamlit>=1.38
-plotly>=5.22
+plotly>=5.24

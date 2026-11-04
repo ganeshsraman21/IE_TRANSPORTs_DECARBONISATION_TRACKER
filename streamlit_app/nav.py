@@ -26,7 +26,7 @@ def sticky_header(page_title: str, current: str) -> None:
             left: 0;
             right: 0;
             width: 100%;
-            z-index: 999;
+            z-index: 1000000;
             background-color: #FFFFFF;
             box-sizing: border-box;
             padding: 0;
